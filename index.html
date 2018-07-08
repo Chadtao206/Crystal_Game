@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <title>Crystal Game</title>
+    <style type="text/css">
+        .image {
+        width: 180px;
+        height: 180px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <h2 class="display-6">Crystal Game!</h2>
+            <p class="lead">This is a simple game about mathematics and addiction!</p>
+            <hr class="my-4">
+            <p>OH NO! You are a drug addict, chasing the perfect high. Luckily you've scored yourself some crystals to smoke. Unfortunately each of these crystals have unknown potency, going past your tolerance will yield unwanted results! Click a package to smoke it!</p>
+            <div class="row"><a class="col-lg-3 btn btn-primary btn-lg start" href="#" role="button">START</a><div class="col-lg-3"></div>
+            <a class="col-lg-3 btn btn-warning btn-lg buy" href="#" role="button">Buy Naloxone</a></div> 
+        </div>
+        <div class="crystal row justify-content-center"></div>
+        <br><br>
+        <div class="row" style="font-weight:bold; color:red; font-size:25px;">
+            <div class="col-lg-3">Tolerance : <span class="tolerance"></span></div>
+            <div class="col-lg-3">Current High : <span class="current"></span></div>
+            <div class="col-lg-3">Score : <span class="score"></span></div>
+            <div class="col-lg-3">Naloxone : <span class="Naloxone"></span></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+    $(document).ready(function(){
+    var crystal ={
+        count:[3,4,5,6],
+        value:[3,4,5,6,7,8,9,10,11,12,],
+    }
+    var tolerance = 0;
+    var total = 0;
+    var score = 0;
+    var Naloxone = 0;
+
+
+
+    //reset function
+    function reset(){
+        winReset();
+        score = 0;
+        $(".score").html(score);
+        Naloxone = 0;
+        $(".Naloxone").html(Naloxone);
+    }
+
+    //win reset
+    function winReset(){
+        crystal ={
+        count:[3,4,5,6],
+        value:[3,4,5,6,7,8,9,10,11,12,],
+    }
+    tolerance = 0;
+    total = 0;
+    $(".current").html(total);
+    $(".crystal").empty();
+    play()
+    }
+    //play function
+    function play(){
+        var counted = crystal.count[Math.floor(Math.random()*crystal.count.length)];
+        console.log(counted);
+        for (i=0; i<counted;i++){
+            var chosenValue = crystal.value[Math.floor(Math.random()*crystal.value.length)];
+            var imageCrystal = $("<img>");
+            imageCrystal.addClass("image");
+            tolerance += chosenValue*(Math.floor(Math.random()*3)+1);
+            crystal.value=crystal.value.filter(item => item !== chosenValue);
+            imageCrystal.attr("src", "https://sites.psu.edu/siowfa14/wp-content/uploads/sites/13467/2014/11/bluemeth.jpg");
+            imageCrystal.attr("data-crystalvalue", chosenValue);
+            $(".crystal").append(imageCrystal);
+        }
+        
+        $(".tolerance").html(tolerance);
+        
+        //check result function
+        function checkresult(){
+            if (total == tolerance){
+                alert("You have achieved the perfect high!");
+                score += 500;
+                $(".score").html(score);
+                winReset();
+            }else if (total > tolerance){
+                if (Naloxone>0){
+                    if(confirm("You went over your limit, use a Naloxone to save your sorry ass?")){
+                        Naloxone--;
+                        $(".Naloxone").html(Naloxone);
+                        winReset();
+                    }else{
+                        alert("You have OD-ed");
+                        reset();
+                    }
+                    
+                }
+                alert("You have OD-ed");
+                reset();
+            }
+        }
+        //click function
+        $(".image").on("click", function(){
+            var crystalValue = ($(this).attr('data-crystalvalue'));
+            crystalValue = parseInt(crystalValue);
+            total += crystalValue;
+            $(".current").html(total);
+            console.log(total);
+            checkresult();
+        })
+
+        //buy Naloxone
+        $(".buy").on("click", function(){
+            if (score > 300){
+                Naloxone ++;
+                $(".Naloxone").html(Naloxone);
+                score = score - 300;
+                $(".score").html(score);
+                alert("You have bought a Naloxone, better safe than sorry!");
+            }
+        })
+    }
+    $(".start").click(play());
+})
+    
+
+    </script>
+</body>
+</html>
