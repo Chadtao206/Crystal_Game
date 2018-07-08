@@ -23,7 +23,7 @@
             <p class="lead">This is a simple game about mathematics and addiction!</p>
             <hr class="my-4">
             <p>OH NO! You are a drug addict, chasing the perfect high. Luckily you've scored yourself some crystals to smoke. Unfortunately each of these crystals have unknown potency, going past your tolerance will yield unwanted results! Click a package to smoke it!</p>
-            <div class="row"><a class="col-lg-3 btn btn-primary btn-lg start" href="#" role="button">START</a><div class="col-lg-3"></div>
+            <div class="row"><a class="start col-lg-3 btn btn-primary btn-lg" href="#" role="button">START</a><div class="col-lg-3"></div>
             <a class="col-lg-3 btn btn-warning btn-lg buy" href="#" role="button">Buy Naloxone</a></div> 
         </div>
         <div class="crystal row justify-content-center"></div>
@@ -100,14 +100,16 @@
                         Naloxone--;
                         $(".Naloxone").html(Naloxone);
                         winReset();
+                        alert("Whew! That was a close one! Time to get high again!")
                     }else{
                         alert("You have OD-ed");
                         reset();
                     }
                     
-                }
+                }else{
                 alert("You have OD-ed");
                 reset();
+            }
             }
         }
         //click function
@@ -120,18 +122,19 @@
             checkresult();
         })
 
-        //buy Naloxone
-        $(".buy").on("click", function(){
-            if (score > 300){
-                Naloxone ++;
-                $(".Naloxone").html(Naloxone);
-                score = score - 300;
-                $(".score").html(score);
-                alert("You have bought a Naloxone, better safe than sorry!");
-            }
-        })
+        
     }
-    $(".start").click(play());
+    //buy Naloxone
+        $(".buy").on("click", function(){
+        if (score > 300){
+        Naloxone = Naloxone + 1;
+        $(".Naloxone").html(Naloxone);
+        score = score - 300;
+        $(".score").html(score);
+        alert("You have bought a Naloxone, better safe than sorry!");
+        }
+    }) 
+    $(".start").on("click", reset());
 })
     
 
